@@ -1,1 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta Network - Official</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background: #070b14; color: #fff; overflow-x: hidden; }
 
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(circle at 20% 20%, #14284d 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, #3d1a5c 0%, transparent 50%),
+                #070b14;
+    animation: bgMove 20s ease-in-out infinite alternate;
+  }
+  @keyframes bgMove {
+    0% { background-position: 0% 0%, 100% 100%; }
+    100% { background-position: 100% 100%, 0% 0%; }
+  }
+
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 40px; background: rgba(10,14,26,0.95);
+    backdrop-filter: blur(12px);
+    position: fixed; width: 100%; top: 0; z-index: 9999;
+    border-bottom: 1px solid #1e2a45;
+  }
+  .nav-left { display: flex; align-items: center; gap: 12px; }
+  .logo-svg { width: 42px; height: 42px; filter: drop-shadow(0 0 8px #4da6ff); }
+  nav h1 { color: #fff; font-size: 22px; letter-spacing: 2px; font-weight: 800; }
+  nav h1 span { color: #4da6ff; }
+  .dots-btn {
+    background: transparent; border: none;
+    font-size: 32px; color: #4da6ff;
+    cursor: pointer; padding: 4px 16px;
+    user-select: none; line-height: 1;
+    border-radius: 8px; transition: 0.2s;
+    font-family: inherit;
+  }
+  .dots-btn:hover, .dots-btn.active { background: #1e2a45; }
+  .menu {
+    display: none;
+    position: fixed; right: 20px; top: 68px;
+    background: #121a2e; border: 1px solid #2a3a5c;
+    border-radius: 12px; width: 260px; overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.9);
+    z-index: 10000;
+  }
+  .menu.show { display: block; }
+  .menu div {
+    padding: 15px 20px; cursor: pointer;
+    border-bottom: 1px solid #1e2a45;
+    transition: 0.2s; font-size: 15px; color: #e0e8f5;
+  }
+  .menu div:last-child { border-bottom: none; }
+  .menu div:hover { background: #1e2a45; color: #4da6ff; }
+
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    padding: 120px 20px 60px;
+  }
+  .hero-logo {
+    width: 120px; height: 120px; margin-bottom: 20px;
+    animation: glow 2.5s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from { filter: drop-shadow(0 0 10px #4da6ff); }
+    to   { filter: drop-shadow(0 0 30px #a855f7); }
+  }
+  .hero h2 {
+    font-size: 62px; font-weight: 800; letter-spacing: 3px;
+    background: linear-gradient(90deg, #4da6ff, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+  }
+  .hero p {
+    font-size: 18px; color: #b0bcd4; max-width: 620px;
+    margin-bottom: 30px; line-height: 1.7;
+  }
+  .badges { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 35px; }
+  .badge {
+    background: rgba(18,32,58,0.7); border: 1px solid #4da6ff;
+    padding: 10px 22px; border-radius: 30px; font-size: 14px;
+    color: #4da6ff; font-weight: 600; backdrop-filter: blur(5px);
+  }
+  .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+  .yt-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #ff0000; color: #fff; text-decoration: none;
+    padding: 14px 30px; border-radius: 30px; font-weight: 700;
+    font-size: 16px; transition: 0.3s; border: none; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,0,0,0.35);
+  }
+  .yt-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,0,0,0.55); }
+  .yt-btn svg { width: 24px; height: 24px; }
+  .pack-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(90deg, #4da6ff, #a855f7); color: #fff;
+    text-decoration: none; padding: 14px 30px; border-radius: 30px;
+    font-weight: 700; font-size: 16px; transition: 0.3s;
+    border: none; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(77,166,255,0.35);
+  }
+  .pack-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(168,85,247,0.55); }
+
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    max-width: 1000px; margin: 50px auto 0; gap: 20px;
+    padding: 0 20px; width: 100%;
+  }
+  .stat {
+    background: rgba(18,26,46,0.6); border: 1px solid #1e2a45;
+    border-radius: 16px; padding: 25px 15px; text-align: center;
+    backdrop-filter: blur(10px); transition: 0.3s;
+  }
+  .stat:hover { border-color: #4da6ff; transform: translateY(-5px); }
+  .stat h3 {
+    font-size: 32px; font-weight: 800;
+    background: linear-gradient(90deg, #4da6ff, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+  }
+  .stat p { color: #8896b0; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+
+  section { padding: 80px 40px; }
+  .section-title {
+    text-align: center; font-size: 38px; margin-bottom: 12px;
+    background: linear-gradient(90deg, #4da6ff, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .section-sub { text-align: center; color: #8896b0; margin-bottom: 50px; font-size: 15px; }
+
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px; max-width: 1100px; margin: 0 auto;
+  }
+  .feature-card {
+    background: rgba(18,26,46,0.6); border: 1px solid #1e2a45;
+    border-radius: 18px; padding: 30px 25px; text-align: center;
+    backdrop-filter: blur(10px); transition: 0.3s;
+  }
+  .feature-card:hover { border-color: #4da6ff; transform: translateY(-8px); box-shadow: 0 15px 40px rgba(77,166,255,0.15); }
+  .feature-icon { font-size: 40px; margin-bottom: 15px; display: inline-block; }
+  .feature-card h4 { font-size: 19px; margin-bottom: 10px; color: #fff; }
+  .feature-card p { color: #8896b0; font-size: 14px; line-height: 1.6; }
+
+  /* Cards */
+  .card-container { max-width: 1100px; margin: 0 auto; }
+  .card {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    background: rgba(18,26,46,0.6);
+    border: 1px solid #1e2a45; border-radius: 20px;
+    overflow: hidden; backdrop-filter: blur(10px);
+    transition: 0.4s;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .card:hover { border-color: #4da6ff; box-shadow: 0 25px 70px rgba(77,166,255,0.15); }
+  .card-image {
+    position: relative; overflow: hidden; min-height: 380px;
+    background: #0a0e1a;
+  }
+  .card-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: 0.5s; display: block;
+  }
+  .card:hover .card-image img { transform: scale(1.05); }
+  .card-image-badge {
+    position: absolute; top: 16px; left: 16px;
+    background: linear-gradient(90deg, #4da6ff, #a855f7);
+    color: #fff; padding: 6px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    z-index: 2;
+  }
+  .card-info { padding: 35px 30px; display: flex; flex-direction: column; }
+  .card-info h3 { font-size: 30px; margin-bottom: 8px; color: #fff; }
+  .card-version {
+    display: inline-block; background: #12203a; border: 1px solid #4da6ff;
+    color: #4da6ff; padding: 4px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; margin-bottom: 18px;
+    width: fit-content;
+  }
+  .card-desc { color: #b0bcd4; font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+  .card-meta { display: flex; gap: 20px; margin-bottom: 22px; flex-wrap: wrap; }
+  .card-meta div { font-size: 13px; color: #8896b0; }
+  .card-meta strong { color: #4da6ff; display: block; font-size: 15px; margin-top: 2px; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+  .tag {
+    background: #12203a; border: 1px solid #2a3a5c;
+    color: #8896b0; padding: 5px 12px; border-radius: 20px;
+    font-size: 12px;
+  }
+  .download-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    color: #fff; text-decoration: none;
+    padding: 16px 30px; border-radius: 12px;
+    font-weight: 800; font-size: 17px; letter-spacing: 1px;
+    transition: 0.3s; margin-top: auto;
+    box-shadow: 0 8px 25px rgba(34,197,94,0.3);
+    border: none; cursor: pointer;
+  }
+  .download-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(34,197,94,0.5); }
+  .download-btn svg { width: 22px; height: 22px; }
+
+  .reviews-section { background: rgba(13,20,36,0.5); backdrop-filter: blur(10px); }
+  .review-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px; max-width: 1100px; margin: 0 auto 50px;
+  }
+  .review-card {
+    background: rgba(18,26,46,0.7); border: 1px solid #1e2a45;
+    padding: 25px; border-radius: 16px; text-align: left;
+    transition: 0.3s; position: relative;
+    backdrop-filter: blur(5px);
+  }
+  .review-card:hover { transform: translateY(-6px); border-color: #4da6ff; }
+  .stars { color: #ffcc00; margin-bottom: 10px; font-size: 18px; }
+  .review-card p { color: #b0bcd4; font-size: 15px; line-height: 1.6; word-wrap: break-word; }
+  .review-card span { display: block; margin-top: 14px; color: #4da6ff; font-weight: 600; }
+  .del-btn {
+    position: absolute; top: 10px; right: 12px;
+    background: transparent; border: none; color: #ff4d4d;
+    cursor: pointer; font-size: 18px; opacity: 0.5;
+    display: none;
+  }
+  .admin-mode .del-btn { display: block; }
+  .del-btn:hover { opacity: 1; }
+
+  .review-form {
+    max-width: 520px; margin: 0 auto; background: rgba(18,26,46,0.7);
+    border: 1px solid #1e2a45; border-radius: 16px;
+    padding: 30px; text-align: left; backdrop-filter: blur(5px);
+  }
+  .review-form h4 { margin-bottom: 18px; color: #4da6ff; font-size: 20px; }
+  .review-form input, .review-form textarea, .review-form select {
+    width: 100%; padding: 12px 14px; margin-bottom: 14px;
+    background: #0a0e1a; border: 1px solid #1e2a45;
+    border-radius: 8px; color: #fff; font-size: 15px;
+    font-family: inherit; outline: none;
+  }
+  .review-form input:focus, .review-form textarea:focus, .review-form select:focus {
+    border-color: #4da6ff;
+  }
+  .review-form textarea { resize: vertical; min-height: 90px; }
+  .submit-btn {
+    width: 100%; padding: 13px; border: none; border-radius: 8px;
+    background: linear-gradient(90deg, #4da6ff, #a855f7);
+    color: #fff; font-weight: 700; font-size: 16px;
+    cursor: pointer; transition: 0.3s;
+  }
+  .submit-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+
+  .faq-section { max-width: 850px; margin: 0 auto; }
+  .faq-item {
+    background: rgba(18,26,46,0.6); border: 1px solid #1e2a45;
+    border-radius: 12px; margin-bottom: 14px; overflow: hidden;
+    transition: 0.3s; backdrop-filter: blur(10px);
+  }
+  .faq-item:hover { border-color: #4da6ff; }
+  .faq-question {
+    padding: 20px 24px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 16px; font-weight: 600; color: #fff;
+    user-select: none; gap: 15px;
+  }
+  .faq-question .icon {
+    color: #4da6ff; font-size: 24px; transition: 0.3s;
+    flex-shrink: 0; line-height: 1;
+  }
+  .faq-item.open .faq-question .icon { transform: rotate(45deg); color: #a855f7; }
+  .faq-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 24px;
+    color: #b0bcd4; font-size: 15px; line-height: 1.7;
+  }
+  .faq-item.open .faq-answer { max-height: 400px; padding: 0 24px 22px; }
+
+  .modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 10001;
+    padding: 20px; backdrop-filter: blur(8px);
+  }
+  .modal.show { display: flex; }
+  .modal-box {
+    background: #121a2e; border: 1px solid #4da6ff;
+    padding: 45px 35px; border-radius: 20px; text-align: center;
+    max-width: 420px; animation: pop 0.3s ease;
+    box-shadow: 0 20px 60px rgba(77,166,255,0.2);
+  }
+  @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-box .modal-icon { font-size: 50px; margin-bottom: 15px; }
+  .modal-box h4 { font-size: 26px; color: #4da6ff; margin-bottom: 12px; }
+  .modal-box p { color: #b0bcd4; margin-bottom: 25px; line-height: 1.7; font-size: 15px; }
+  .modal-box button {
+    background: linear-gradient(90deg, #4da6ff, #a855f7);
+    color: #fff; border: none;
+    padding: 12px 32px; border-radius: 10px; font-weight: 700;
+    cursor: pointer; font-size: 15px; margin: 0 5px;
+    transition: 0.3s;
+  }
+  .modal-box button:hover { transform: translateY(-2px); opacity: 0.9; }
+  .modal-box input {
+    width: 100%; padding: 12px; margin-bottom: 15px;
+    background: #0a0e1a; border: 1px solid #1e2a45;
+    border-radius: 8px; color: #fff; font-size: 15px;
+    text-align: center;
+  }
+
+  .admin-lock {
+    position: fixed; bottom: 20px; right: 20px;
+    background: rgba(18,26,46,0.9); border: 1px solid #1e2a45;
+    width: 50px; height: 50px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 22px; z-index: 150;
+    transition: 0.3s; backdrop-filter: blur(10px);
+  }
+  .admin-lock:hover { border-color: #4da6ff; transform: scale(1.1); }
+  .admin-lock.active { background: #22c55e; border-color: #22c55e; }
+
+  footer {
+    text-align: center; padding: 30px; color: #556080;
+    font-size: 14px; border-top: 1px solid #1e2a45;
+    background: rgba(10,14,26,0.8);
+  }
+
+  @media (max-width: 800px) {
+    .card { grid-template-columns: 1fr; }
+    .card-image { min-height: 250px; }
+  }
+  @media (max-width: 600px) {
+    .hero h2 { font-size: 38px; }
+    nav { padding: 12px 18px; }
+    nav h1 { font-size: 17px; }
+    section { padding: 60px 18px; }
+    .section-title { font-size: 28px; }
+    .card-info { padding: 25px 20px; }
+    .card-info h3 { font-size: 24px; }
+    .menu { right: 10px; width: 230px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-left">
+    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#4da6ff"/>
+          <stop offset="100%" stop-color="#a855f7"/>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="url(#grad1)" stroke-width="4"/>
+      <path d="M25 65 L25 40 L37 50 L50 32 L63 50 L75 40 L75 65 Z"
+            fill="url(#grad1)" stroke="url(#grad1)" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="25" cy="38" r="4" fill="#4da6ff"/>
+      <circle cx="50" cy="30" r="4" fill="#a855f7"/>
+      <circle cx="75" cy="38" r="4" fill="#4da6ff"/>
+      <rect x="25" y="68" width="50" height="6" rx="3" fill="url(#grad1)"/>
+    </svg>
+    <h1>META <span>NETWORK</span></h1>
+  </div>
+  <button class="dots-btn" onclick="toggleMenu(event)">⋮</button>
+</nav>
+
+<!-- 3-DOT MENU -->
+<div class="menu" id="menu">
+  <div onclick="goTo('home')">🏠 Home</div>
+  <div onclick="goTo('features')">✨ Features</div>
+  <div onclick="goTo('packs')">🎨 Texture Packs</div>
+  <div onclick="goTo('clients')">💻 Clients</div>
+  <div onclick="goTo('reviews')">⭐ Reviews</div>
+  <div onclick="goTo('faq')">❓ FAQ</div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <svg class="hero-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#4da6ff"/>
+        <stop offset="100%" stop-color="#a855f7"/>
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="46" fill="none" stroke="url(#grad2)" stroke-width="4"/>
+    <path d="M25 65 L25 40 L37 50 L50 32 L63 50 L75 40 L75 65 Z"
+          fill="url(#grad2)" stroke="url(#grad2)" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="25" cy="38" r="4" fill="#4da6ff"/>
+    <circle cx="50" cy="30" r="4" fill="#a855f7"/>
+    <circle cx="75" cy="38" r="4" fill="#4da6ff"/>
+    <rect x="25" y="68" width="50" height="6" rx="3" fill="url(#grad2)"/>
+  </svg>
+  <h2>META NETWORK</h2>
+  <p>Premium Minecraft resources for competitive players. 
+     Our texture packs and clients are <b>100% safe, optimized, and trusted</b> by thousands of players worldwide.</p>
+  <div class="badges">
+    <div class="badge">✔ 100% Safe</div>
+    <div class="badge">⚡ High Performance</div>
+    <div class="badge">🔒 Trusted by Players</div>
+  </div>
+  <div class="hero-buttons">
+    <a href="https://youtube.com/@zenithpvpx?si=KIzZYkIdVkRp2RvC" target="_blank" class="yt-btn">
+      <svg viewBox="0 0 24 24" fill="white"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6z"/></svg>
+      YouTube
+    </a>
+    <button onclick="goTo('packs')" class="pack-btn">🎨 View Packs</button>
+    <button onclick="goTo('clients')" class="pack-btn">💻 View Clients</button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><h3>50K+</h3><p>Downloads</p></div>
+    <div class="stat"><h3>10K+</h3><p>Happy Users</p></div>
+    <div class="stat"><h3>100%</h3><p>Safe & Secure</p></div>
+    <div class="stat"><h3>24/7</h3><p>Support</p></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <h2 class="section-title">✨ Why Choose Meta Network?</h2>
+  <p class="section-sub">Everything you need for the ultimate Minecraft experience</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h4>100% Safe</h4>
+      <p>No viruses, no malware. Every file is tested and verified before release.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h4>High Performance</h4>
+      <p>Optimized for maximum FPS and smooth gameplay on any device.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h4>Premium Quality</h4>
+      <p>Handcrafted textures and clients designed by experienced players.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <h4>Regular Updates</h4>
+      <p>Always up to date with the latest Minecraft versions and features.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEXTURE PACKS -->
+<section id="packs" style="background: rgba(13,20,36,0.4);">
+  <h2 class="section-title">🎨 Texture Packs</h2>
+  <p class="section-sub">Handcrafted packs for the ultimate PvP experience</p>
+
+  <div class="card-container">
+    <div class="card">
+      <div class="card-image">
+        <img src="https://raw.githubusercontent.com/brotheransari496-boop/Meta-Network-/9e59a5e2611e16a5192aca19a0c4238dbb85ed18/screenshot_1%20(1).webp" alt="Pigman Black">
+        <div class="card-image-badge">🔥 FEATURED</div>
+      </div>
+      <div class="card-info">
+        <h3>Pigman Black</h3>
+        <div class="card-version">Version 1.21.11</div>
+        <p class="card-desc">
+          A dark-themed PvP texture pack with a sleek black aesthetic. 
+          Every texture is carefully designed for maximum visibility and performance 
+          in competitive gameplay.
+        </p>
+        <div class="card-meta">
+          <div>Resolution<strong>16x</strong></div>
+          <div>File Size<strong>45.3 MB</strong></div>
+          <div>Category<strong>PvP / Clean</strong></div>
+        </div>
+        <div class="tags">
+          <span class="tag">#PvP</span>
+          <span class="tag">#Clean</span>
+          <span class="tag">#16X</span>
+          <span cl
